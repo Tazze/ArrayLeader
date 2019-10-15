@@ -2,7 +2,7 @@ package com.soprasteria.arrayleader;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
+import java.util.Optional;
 import java.util.TreeSet;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -45,10 +45,11 @@ class Solution {
                     .stream()
                     .filter(entry -> entry.getValue() > N/2.0)
                     .map(entry -> entry.getKey())
-                    .collect(Collectors.toSet());
+                    .findAny();
                 }
             )
-            .flatMap(set -> set.stream())
+            .filter(Optional::isPresent)
+            .map(Optional::get)
             .collect(Collectors.toSet())
         );
         return answer.toArray(new Integer[answer.size()]);

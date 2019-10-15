@@ -1,0 +1,101 @@
+package com.soprasteria.arrayleader;
+
+import static org.junit.Assert.assertArrayEquals;
+
+import org.junit.Test;
+
+public class SolutionTest 
+{
+
+    @Test
+    public void shouldReturnExpectedResultForTestCaseOne()
+    {
+        int K = 3;
+        int M = 5;
+        int[] A = new int[] {2, 1, 3, 1, 2, 2, 3};
+        Integer[] expected = new Integer[] {2, 3};
+        Integer[] actual = new Solution().solution(K, M, A);
+        assertArrayEquals(expected, actual);
+    }
+
+    @Test
+    public void shouldReturnExpectedResultForTestCaseTwo()
+    {
+        int K = 4;
+        int M = 2;
+        int[] A = new int[] {1, 2, 2, 1, 2};
+        Integer[] expected = new Integer[] {2, 3};
+        Integer[] actual = new Solution().solution(K, M, A);
+        assertArrayEquals(expected, actual);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void shouldThrowExceptionWhenNIsOutsideLowerBounds(){
+        int[] A = new int[] {};
+        new Solution().solution(0, 0, A);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void shouldThrowExceptionWhenNIsOutsideUpperBounds(){
+        int[] A = new int[100001];
+        new Solution().solution(0, 0, A);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void shouldThrowExceptionWhenMIsOutsideLowerBounds(){
+        int M = 0;
+        
+        int K = 4;
+        int[] A = new int[] {1, 2, 2, 1, 2};
+
+        new Solution().solution(K, M, A);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void shouldThrowExceptionWhenMIsOutsideUpperBounds(){
+        int M = 100001;
+
+        int K = 4;
+        int[] A = new int[] {1, 2, 2, 1, 2};
+
+        new Solution().solution(K, M, A);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void shouldThrowExceptionWhenKIsOutsideLowerBounds(){
+        int K = 0;
+
+        int M = 2;
+        int[] A = new int[] {1, 2, 2, 1, 2};
+
+        new Solution().solution(K, M, A);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void shouldThrowExceptionWhenKIsOutsideUpperBounds(){
+        int K = 6;
+
+        int M = 2;
+        int[] A = new int[] {1, 2, 2, 1, 2};
+
+        new Solution().solution(K, M, A);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void shouldThrowExceptionWhenArrayElementIsOutsideLowerBounds(){
+        int K = 4;
+        int M = 2;
+        int[] A = new int[] {1, 2, 2, 1, 0};
+
+        new Solution().solution(K, M, A);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void shouldThrowExceptionWhenArrayElementIsOutsideUpperBounds(){
+        int K = 4;
+        int M = 2;
+        int[] A = new int[] {1, 2, 2, 1, 3};
+
+        new Solution().solution(K, M, A);
+    }
+}

@@ -1,8 +1,8 @@
 package com.soprasteria.arrayleader;
 
-import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
-import java.util.SortedSet;
+import java.util.Set;
 import java.util.TreeSet;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -15,7 +15,6 @@ class Solution {
 
         inputCheck(K, M, N, A);
 
-        SortedSet<Integer> answer = Collections.synchronizedSortedSet(new TreeSet<>());
         Map<Integer, Integer> counter = IntStream.of(A)
             .boxed()
             .collect(Collectors.toMap(
@@ -24,22 +23,34 @@ class Solution {
                 (prev, next) -> prev + 1
             ));
 
-        IntStream.rangeClosed(0, N-K)
+        TreeSet<Integer> answer = new TreeSet<>();
+        answer.addAll(IntStream.rangeClosed(0, N-K)
             .parallel()
-            .forEach(index -> {
-                Map<Integer, Integer> segmentCounter = IntStream.range(0, K)
-                    .boxed()
-                    .collect(Collectors.toMap(
-                        offset -> A[index + offset] + 1, 
-                        offset -> counter.getOrDefault(A[index + offset] + 1, 0) + 1,
-                        (prev, next) -> prev + 1
-                ));
-                answer.addAll(segmentCounter.entrySet()
+            .mapToObj(index -> 
+                {
+                HashMap<Integer, Integer> segmentCounter = new HashMap<>();
+                for(int offset = 0; offset < K; offset++){
+                    segmentCounter.put(
+                        A[index + offset], 
+                        segmentCounter.getOrDefault(
+                            A[index + offset], 
+                            counter.get(A[index + offset])) -1);
+                    segmentCounter.put(
+                        A[index + offset] + 1, 
+                        segmentCounter.getOrDefault(
+                            A[index + offset] + 1, 
+                            counter.getOrDefault(A[index + offset] + 1, 1)) +1);
+                }
+                return segmentCounter.entrySet()
                     .stream()
                     .filter(entry -> entry.getValue() > N/2.0)
                     .map(entry -> entry.getKey())
-                    .collect(Collectors.toList()));
-            });
+                    .collect(Collectors.toSet());
+                }
+            )
+            .flatMap(set -> set.stream())
+            .collect(Collectors.toSet())
+        );
         return answer.toArray(new Integer[answer.size()]);
     }
 

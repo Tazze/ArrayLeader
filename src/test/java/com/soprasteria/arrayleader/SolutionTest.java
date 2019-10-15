@@ -29,6 +29,17 @@ public class SolutionTest
         assertArrayEquals(expected, actual);
     }
 
+    @Test
+    public void shouldReturnExpectedResultForTestCaseThree()
+    {
+        int K = 4;
+        int M = 5;
+        int[] A = new int[] {2, 1, 2, 2};
+        Integer[] expected = new Integer[] {3};
+        Integer[] actual = new Solution().solution(K, M, A);
+        assertArrayEquals(expected, actual);
+    }
+
     @Test(expected = IllegalArgumentException.class)
     public void shouldThrowExceptionWhenNIsOutsideLowerBounds(){
         int[] A = new int[] {};

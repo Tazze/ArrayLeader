@@ -26,34 +26,38 @@ class Solution {
         TreeSet<Integer> answer = new TreeSet<>();
         answer.addAll(IntStream.rangeClosed(0, N-K)
             .parallel()
-            .mapToObj(index -> 
-                {
-                HashMap<Integer, Integer> segmentCounter = new HashMap<>();
-                for(int offset = 0; offset < K; offset++){
-                    segmentCounter.put(
-                        A[index + offset], 
-                        segmentCounter.getOrDefault(
-                            A[index + offset], 
-                            counter.get(A[index + offset])) -1);
-                    segmentCounter.put(
-                        A[index + offset] + 1, 
-                        segmentCounter.getOrDefault(
-                            A[index + offset] + 1, 
-                            counter.getOrDefault(A[index + offset] + 1, 0)) +1);
-                }
-                return segmentCounter.entrySet()
-                    .stream()
-                    .filter(entry -> entry.getValue() > N/2.0)
-                    .map(entry -> entry.getKey())
-                    .findAny();
-                }
-            )
+            .mapToObj(index -> getSegmentLeader(K, N, A, counter, index))
             .filter(Optional::isPresent)
             .map(Optional::get)
             .collect(Collectors.toSet())
         );
         return answer.toArray(new Integer[answer.size()]);
     }
+
+    private Optional<Integer> getSegmentLeader(int K, int N, int[] A, Map<Integer, Integer> counter, int index)
+    {
+        HashMap<Integer, Integer> segmentCounter = new HashMap<>();
+        for(int offset = 0; offset < K; offset++){
+            Integer keyToDecrease = A[index + offset];
+            Integer keyToIncrease = A[index + offset] + 1;
+            segmentCounter.put(
+                keyToDecrease,
+                getCount(keyToDecrease, counter, segmentCounter) -1);
+            segmentCounter.put(
+                keyToIncrease,
+                getCount(keyToIncrease, counter, segmentCounter) +1);
+        }
+
+        return segmentCounter.entrySet()
+            .stream()
+            .filter(entry -> entry.getValue() > N/2.0)
+            .map(entry -> entry.getKey())
+            .findAny();
+    }
+
+    private Integer getCount(Integer key, Map<Integer, Integer> globalCounter, Map<Integer, Integer> segmentCounter){
+        return segmentCounter.getOrDefault(key, globalCounter.getOrDefault(key, 0));
+    }  
 
     private void inputCheck(int K, int M, int N, int[] A){
         if(!(N > 0 && N <= 100000))
@@ -68,5 +72,4 @@ class Solution {
                 throw new IllegalArgumentException("Array Element is out of bounds [1..."+ M +"]: " + num);
         }
     }
-
 }

@@ -12,11 +12,11 @@ import java.util.stream.IntStream;
 
 class Solution {
 
-    private int K;
-    private int M;
-    private int[] A;
-    private int N;
-    private Map<Integer, Integer> globalCounter;
+    private final int K;
+    private final int M;
+    private final int[] A;
+    private final int N;
+    private final Map<Integer, Integer> globalCounter;
 
     public Solution(int K, int M, int[] A){
         this.K = K;

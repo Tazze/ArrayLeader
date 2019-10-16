@@ -1,8 +1,10 @@
 package com.soprasteria.arrayleader;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -34,14 +36,14 @@ class Solution {
     }
 
     public Integer[] findPotentialLeaders(){
-        TreeSet<Integer> answer = new TreeSet<>();
-        answer.addAll(IntStream.rangeClosed(0, N-K)
+        SortedSet<Integer> answer = IntStream.rangeClosed(0, N-K)
             .parallel()
             .mapToObj(this::getSegmentLeader)
             .filter(Optional::isPresent)
             .map(Optional::get)
-            .collect(Collectors.toSet())
-        );
+            .collect(Collectors.toCollection(() -> 
+                Collections.synchronizedSortedSet(new TreeSet<Integer>())
+            ));
         return answer.toArray(new Integer[answer.size()]);
     }
 

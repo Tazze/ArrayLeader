@@ -35,16 +35,17 @@ class Solution {
             ));
     }
 
-    public Integer[] findPotentialLeaders(){
-        SortedSet<Integer> answer = IntStream.rangeClosed(0, N-K)
-            .parallel()
-            .mapToObj(this::getSegmentLeader)
-            .filter(Optional::isPresent)
-            .map(Optional::get)
-            .collect(Collectors.toCollection(() -> 
-                Collections.synchronizedSortedSet(new TreeSet<Integer>())
-            ));
-        return answer.toArray(new Integer[answer.size()]);
+    public int[] findPotentialLeaders(){
+        return toIntArray(
+            IntStream.rangeClosed(0, N-K)
+                .parallel()
+                .mapToObj(this::getSegmentLeader)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .collect(Collectors.toCollection(() -> 
+                    Collections.synchronizedSortedSet(new TreeSet<Integer>())
+                ))
+            );
     }
 
     private Optional<Integer> getSegmentLeader(int index)
@@ -85,5 +86,15 @@ class Solution {
 
     private boolean anyArrayElementOutOfBounds(){
         return IntStream.of(A).anyMatch(value -> value < 1 || value > M);
+    }
+
+    private int[] toIntArray(SortedSet<Integer> set){
+        int[] result = new int[set.size()];
+        int i = 0;
+        for(int value: set){
+            result[i] = value;
+            i++;
+        }
+        return result;
     }
 }

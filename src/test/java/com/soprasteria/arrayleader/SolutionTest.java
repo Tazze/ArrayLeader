@@ -13,8 +13,8 @@ public class SolutionTest
         int K = 3;
         int M = 5;
         int[] A = new int[] {2, 1, 3, 1, 2, 2, 3};
-        Integer[] expected = new Integer[] {2, 3};
-        Integer[] actual = new Solution(K, M, A).findPotentialLeaders();
+        int[] expected = new int[] {2, 3};
+        int[] actual = new Solution(K, M, A).findPotentialLeaders();
         assertArrayEquals(expected, actual);
     }
 
@@ -24,8 +24,8 @@ public class SolutionTest
         int K = 4;
         int M = 2;
         int[] A = new int[] {1, 2, 2, 1, 2};
-        Integer[] expected = new Integer[] {2, 3};
-        Integer[] actual = new Solution(K, M, A).findPotentialLeaders();
+        int[] expected = new int[] {2, 3};
+        int[] actual = new Solution(K, M, A).findPotentialLeaders();
         assertArrayEquals(expected, actual);
     }
 
@@ -35,8 +35,8 @@ public class SolutionTest
         int K = 4;
         int M = 5;
         int[] A = new int[] {2, 1, 2, 2};
-        Integer[] expected = new Integer[] {3};
-        Integer[] actual = new Solution(K, M, A).findPotentialLeaders();
+        int[] expected = new int[] {3};
+        int[] actual = new Solution(K, M, A).findPotentialLeaders();
         assertArrayEquals(expected, actual);
     }
 

@@ -14,7 +14,7 @@ public class SolutionTest
         int M = 5;
         int[] A = new int[] {2, 1, 3, 1, 2, 2, 3};
         Integer[] expected = new Integer[] {2, 3};
-        Integer[] actual = new Solution().solution(K, M, A);
+        Integer[] actual = new Solution(K, M, A).findPotentialLeaders();
         assertArrayEquals(expected, actual);
     }
 
@@ -25,7 +25,7 @@ public class SolutionTest
         int M = 2;
         int[] A = new int[] {1, 2, 2, 1, 2};
         Integer[] expected = new Integer[] {2, 3};
-        Integer[] actual = new Solution().solution(K, M, A);
+        Integer[] actual = new Solution(K, M, A).findPotentialLeaders();
         assertArrayEquals(expected, actual);
     }
 
@@ -36,20 +36,26 @@ public class SolutionTest
         int M = 5;
         int[] A = new int[] {2, 1, 2, 2};
         Integer[] expected = new Integer[] {3};
-        Integer[] actual = new Solution().solution(K, M, A);
+        Integer[] actual = new Solution(K, M, A).findPotentialLeaders();
         assertArrayEquals(expected, actual);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void shouldThrowExceptionWhenNIsOutsideLowerBounds(){
         int[] A = new int[] {};
-        new Solution().solution(0, 0, A);
+        int K = 0;
+        int M = 0;
+
+        new Solution(K, M, A).findPotentialLeaders();
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void shouldThrowExceptionWhenNIsOutsideUpperBounds(){
         int[] A = new int[100001];
-        new Solution().solution(0, 0, A);
+        int K = 0;
+        int M = 0;
+
+        new Solution(K, M, A).findPotentialLeaders();
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -59,7 +65,7 @@ public class SolutionTest
         int K = 4;
         int[] A = new int[] {1, 2, 2, 1, 2};
 
-        new Solution().solution(K, M, A);
+        new Solution(K, M, A).findPotentialLeaders();
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -69,7 +75,7 @@ public class SolutionTest
         int K = 4;
         int[] A = new int[] {1, 2, 2, 1, 2};
 
-        new Solution().solution(K, M, A);
+        new Solution(K, M, A).findPotentialLeaders();
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -79,7 +85,7 @@ public class SolutionTest
         int M = 2;
         int[] A = new int[] {1, 2, 2, 1, 2};
 
-        new Solution().solution(K, M, A);
+        new Solution(K, M, A).findPotentialLeaders();
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -89,7 +95,7 @@ public class SolutionTest
         int M = 2;
         int[] A = new int[] {1, 2, 2, 1, 2};
 
-        new Solution().solution(K, M, A);
+        new Solution(K, M, A).findPotentialLeaders();
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -98,7 +104,7 @@ public class SolutionTest
         int M = 2;
         int[] A = new int[] {1, 2, 2, 1, 0};
 
-        new Solution().solution(K, M, A);
+        new Solution(K, M, A).findPotentialLeaders();
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -107,6 +113,6 @@ public class SolutionTest
         int M = 2;
         int[] A = new int[] {1, 2, 2, 1, 3};
 
-        new Solution().solution(K, M, A);
+        new Solution(K, M, A).findPotentialLeaders();
     }
 }

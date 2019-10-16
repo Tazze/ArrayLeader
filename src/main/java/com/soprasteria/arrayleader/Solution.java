@@ -10,23 +10,34 @@ import java.util.stream.IntStream;
 
 class Solution {
 
-    public Integer[] solution(int K, int M, int[] A){
-        int N = A.length;
+    private int K;
+    private int M;
+    private int[] A;
+    private int N;
+    private Map<Integer, Integer> globalCounter;
 
-        inputCheck(K, M, N, A);
+    public Solution(int K, int M, int[] A){
+        this.K = K;
+        this.M = M;
+        this.A = A;
+        this.N = A.length;
 
-        Map<Integer, Integer> counter = IntStream.of(A)
+        inputCheck();
+
+        this.globalCounter = IntStream.of(A)
             .boxed()
             .collect(Collectors.toMap(
                 Function.identity(), 
                 value -> 1,
                 (prev, next) -> prev + 1
             ));
+    }
 
+    public Integer[] solve(){
         TreeSet<Integer> answer = new TreeSet<>();
         answer.addAll(IntStream.rangeClosed(0, N-K)
             .parallel()
-            .mapToObj(index -> getSegmentLeader(K, N, A, counter, index))
+            .mapToObj(this::getSegmentLeader)
             .filter(Optional::isPresent)
             .map(Optional::get)
             .collect(Collectors.toSet())
@@ -34,7 +45,7 @@ class Solution {
         return answer.toArray(new Integer[answer.size()]);
     }
 
-    private Optional<Integer> getSegmentLeader(int K, int N, int[] A, Map<Integer, Integer> counter, int index)
+    private Optional<Integer> getSegmentLeader(int index)
     {
         HashMap<Integer, Integer> segmentCounter = new HashMap<>();
         for(int offset = 0; offset < K; offset++){
@@ -42,10 +53,10 @@ class Solution {
             Integer keyToIncrease = A[index + offset] + 1;
             segmentCounter.put(
                 keyToDecrease,
-                getCount(keyToDecrease, counter, segmentCounter) -1);
+                getCount(keyToDecrease, segmentCounter) -1);
             segmentCounter.put(
                 keyToIncrease,
-                getCount(keyToIncrease, counter, segmentCounter) +1);
+                getCount(keyToIncrease, segmentCounter) +1);
         }
 
         return segmentCounter.entrySet()
@@ -55,11 +66,11 @@ class Solution {
             .findAny();
     }
 
-    private Integer getCount(Integer key, Map<Integer, Integer> globalCounter, Map<Integer, Integer> segmentCounter){
+    private Integer getCount(Integer key, Map<Integer, Integer> segmentCounter){
         return segmentCounter.getOrDefault(key, globalCounter.getOrDefault(key, 0));
     }  
 
-    private void inputCheck(int K, int M, int N, int[] A){
+    private void inputCheck(){
         if(!(N > 0 && N <= 100000))
             throw new IllegalArgumentException("Parameter N is out of bounds [1...100,000]: " + N);
         if(!(N > 0 && M <= 100000))

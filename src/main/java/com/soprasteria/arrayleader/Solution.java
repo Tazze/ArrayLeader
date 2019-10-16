@@ -79,10 +79,7 @@ class Solution {
             throw new IllegalArgumentException("Parameter M is out of bounds [1...100,000]: " + M);
         if(!(K > 0 && K <= N))
             throw new IllegalArgumentException("Parameter K is out of bounds [1..." + N + "]: " + K);
-        for(int i = 0; i<N; i++){
-            int num = A[i];
-            if(num<1 || num > M)
-                throw new IllegalArgumentException("Array Element is out of bounds [1..."+ M +"]: " + num);
-        }
+        if(IntStream.of(A).anyMatch(value -> value < 1 || value > M))
+            throw new IllegalArgumentException("Array Element is out of bounds [1..."+ M +"]");
     }
 }

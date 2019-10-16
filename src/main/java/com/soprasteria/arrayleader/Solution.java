@@ -39,7 +39,7 @@ class Solution {
                         A[index + offset] + 1, 
                         segmentCounter.getOrDefault(
                             A[index + offset] + 1, 
-                            counter.getOrDefault(A[index + offset] + 1, 1)) +1);
+                            counter.getOrDefault(A[index + offset] + 1, 0)) +1);
                 }
                 return segmentCounter.entrySet()
                     .stream()

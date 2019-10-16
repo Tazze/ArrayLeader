@@ -33,7 +33,7 @@ class Solution {
             ));
     }
 
-    public Integer[] solve(){
+    public Integer[] findPotentialLeaders(){
         TreeSet<Integer> answer = new TreeSet<>();
         answer.addAll(IntStream.rangeClosed(0, N-K)
             .parallel()

@@ -26,20 +26,14 @@ class Solution {
 
         inputCheck();
 
-        this.globalCounter = IntStream.of(A)
-            .boxed()
-            .collect(Collectors.toMap(
-                Function.identity(), 
-                value -> 1,
-                (prev, next) -> prev + 1
-            ));
+        this.globalCounter = computeGlobalCounter();
     }
 
     public int[] findPotentialLeaders(){
-        return toIntArray(
+        return sortedSetToIntArray(
             IntStream.rangeClosed(0, N-K)
                 .parallel()
-                .mapToObj(this::getSegmentLeader)
+                .mapToObj(this::findSegmentLeader)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .collect(Collectors.toCollection(() -> 
@@ -48,47 +42,46 @@ class Solution {
             );
     }
 
-    private Optional<Integer> getSegmentLeader(int index)
+    private Optional<Integer> findSegmentLeader(int index)
     {
+        return computeSegmentCounter(index)
+            .entrySet()
+            .stream()
+            .filter(entry -> entry.getValue() > N/2.0)
+            .map(entry -> entry.getKey())
+            .findAny();
+    }
+    
+    private Map<Integer, Integer> computeGlobalCounter(){
+        return IntStream.of(A)
+            .boxed()
+            .collect(Collectors.toMap(
+                Function.identity(), 
+                value -> 1,
+                (prev, next) -> prev + 1
+            ));
+    }
+
+    private Map<Integer, Integer> computeSegmentCounter(int index){
         HashMap<Integer, Integer> segmentCounter = new HashMap<>();
         for(int offset = 0; offset < K; offset++){
             Integer keyToDecrease = A[index + offset];
             Integer keyToIncrease = A[index + offset] + 1;
             segmentCounter.put(
                 keyToDecrease,
-                getCount(keyToDecrease, segmentCounter) -1);
+                getSegmentCountForNumber(keyToDecrease, segmentCounter) -1);
             segmentCounter.put(
                 keyToIncrease,
-                getCount(keyToIncrease, segmentCounter) +1);
+                getSegmentCountForNumber(keyToIncrease, segmentCounter) +1);
         }
-
-        return segmentCounter.entrySet()
-            .stream()
-            .filter(entry -> entry.getValue() > N/2.0)
-            .map(entry -> entry.getKey())
-            .findAny();
+        return segmentCounter;
     }
 
-    private Integer getCount(Integer key, Map<Integer, Integer> segmentCounter){
+    private Integer getSegmentCountForNumber(Integer key, Map<Integer, Integer> segmentCounter){
         return segmentCounter.getOrDefault(key, globalCounter.getOrDefault(key, 0));
-    }  
-
-    private void inputCheck(){
-        if(!(N > 0 && N <= 100000))
-            throw new IllegalArgumentException("Parameter N is out of bounds [1...100,000]: " + N);
-        if(!(N > 0 && M <= 100000))
-            throw new IllegalArgumentException("Parameter M is out of bounds [1...100,000]: " + M);
-        if(!(K > 0 && K <= N))
-            throw new IllegalArgumentException("Parameter K is out of bounds [1..." + N + "]: " + K);
-        if(anyArrayElementOutOfBounds())
-            throw new IllegalArgumentException("Array Element is out of bounds [1..."+ M +"]");
     }
 
-    private boolean anyArrayElementOutOfBounds(){
-        return IntStream.of(A).anyMatch(value -> value < 1 || value > M);
-    }
-
-    private int[] toIntArray(SortedSet<Integer> set){
+    private int[] sortedSetToIntArray(SortedSet<Integer> set){
         int[] result = new int[set.size()];
         int i = 0;
         for(int value: set){
@@ -96,5 +89,26 @@ class Solution {
             i++;
         }
         return result;
+    }
+
+    private void inputCheck(){
+        checkParameterBounds(N, "N", 1, 100000);
+        checkParameterBounds(M, "M", 1, 100000);
+        checkParameterBounds(K, "K", 1, N);
+        checkArrayElementBounds();
+    }
+
+    private void checkParameterBounds(int parameterValue, String parameterName, int lowerBounds, int upperBounds){
+        if(parameterValue < lowerBounds || parameterValue > upperBounds)
+            throw new IllegalArgumentException("Parameter "+parameterName+" is out of bounds ["+lowerBounds+"..."+upperBounds+"]: " + parameterValue);
+    }
+
+    private void checkArrayElementBounds(){
+        if(anyArrayElementOutOfBounds())
+            throw new IllegalArgumentException("An Array Element is out of bounds [1..."+ M +"]");
+    }
+
+    private boolean anyArrayElementOutOfBounds(){
+        return IntStream.of(A).anyMatch(value -> value < 1 || value > M);
     }
 }
